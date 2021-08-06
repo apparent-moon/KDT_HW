@@ -44,16 +44,11 @@ if (isNaN(amount)) {
     if (money < productlist[0].price) {
       return null;
     } else {
-      //정상적인 사용자 입력값을 받으면 아래 for문 실행
-      //만약 제일 마지막값(=제일 비싼 상품의 값)보다 사용자 입력값이 비싸다면 마지막배열을 return
-      if (productlist[productlist.length - 1].price <= money) {
-        return productlist[productlist.length - 1];
-      } else {
-        //아니라면 for문을 돌면서 값을 비교하여, 상품값이 사용자 입력값보다 비싸다면 그 전값을(살수있는 제일 비싼 상품) return
-        for (let i = 0; productlist.length; i++) {
-          if (productlist[i].price > money) {
-            return productlist[i - 1];
-          }
+    //for문을 마지막배열(제일 비싼 상품)부터 돌면서 사용자의 입력값과 비교하여 배열을 return
+      for (let i = productlist.length - 1; i >= 0; i--) {
+        if (productlist[i].price <= money) {
+          console.log(productlist[i].price);
+          return productlist[i];
         }
       }
     }
