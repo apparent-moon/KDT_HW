@@ -1,13 +1,27 @@
+import json
 from NaverNewsCrawler import NaverNewsCrawler
+#### 엑셀 파일의 정보를 읽어올 수 있는 모듈을 import하세요.
+from openpyxl import load_workbook, Workbook
+
+with open ('conf.json') as f:
+config = json.load(f)
 
 ####사용자로 부터 기사 수집을 원하는 키워드를 input을 이용해 입력받아 ? 부분에 넣으세요
 
 keyword = input("기사 수집을 원하는 키워드를 입력해주세요: ")
+
+while len(keyword) == 0:
+    keyword = input("기사 수집을 원하는 키워드를 입력해주세요: ")
+
 crawler = NaverNewsCrawler(keyword)
 
 #### 수집한 데이터를 저장할 엑셀 파일명을 input을 이용해 입력받아 ? 부분에 넣으세요
 
 news_excel = input("수집한 데이터를 저장할 엑셀 파일명을 입력해주세요: ")
+
+while len(news_excel) == 0:
+    news_excel = input("수집한 데이터를 저장할 엑셀 파일명을 입력해주세요: ")
+
 crawler.get_news(news_excel)
 
 #### 아래코드를 실행해 이메일 발송 기능에 필요한 모듈을 임포트하세요.
@@ -19,8 +33,8 @@ import re
 #### gmail 발송 기능에 필요한 계정 정보를 아래 코드에 입력하세요.
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 465
-SMTP_USER = '' #테스트 완료 후 삭제하여 깃허브 반영
-SMTP_PASSWORD = '' #테스트 완료 후 삭제하여 깃허브 반영
+SMTP_USER = config['email'] #테스트 완료 후 삭제하여 깃허브 반영
+SMTP_PASSWORD = config['password'] #테스트 완료 후 삭제하여 깃허브 반영
 
 #### 아래 코드를 실행해 메일 발송에 필요한 send_mail 함수를 만드세요.
 def send_mail(name, addr, subject, contents, attachment=None):
@@ -59,9 +73,6 @@ def send_mail(name, addr, subject, contents, attachment=None):
     smtp.quit()
 
 #### 프로젝트 폴더에 있는 email_list.xlsx 파일에 이메일 받을 사람들의 정보를 입력하세요.
-
-from openpyxl import Workbook
-
 wb = Workbook()
 ws = wb.active
 
@@ -70,14 +81,10 @@ ws['B1'] = '이름'
 ws['C1'] = '이메일'
 
 ws['A2'] = '1'
-ws['B2'] = '' #테스트 완료 후 삭제하여 깃허브 반영
-ws['C2'] = '' #테스트 완료 후 삭제하여 깃허브 반영
+ws['B2'] = '' #테스트 후 삭제 완료
+ws['C2'] = '' #테스트 후 삭제 완료
 
 wb.save('email_list.xlsx')
-
-#### 엑셀 파일의 정보를 읽어올 수 있는 모듈을 import하세요.
-
-from openpyxl import load_workbook
 
 #### email_list.xlsx 파일을 읽어와 해당 사람들에게 수집한 뉴스 정보 엑셀 파일을 send_mail 함수를 이용해 전송하세요.
 
@@ -92,10 +99,12 @@ for row in data.iter_rows(max_row=2):
         peoplelist.append(cell.value)
     emails.append(peoplelist)
 
-name = (emails[1][1])
-address = (emails[1][2])
-subject = keyword + '뉴스 입니다'
-contents = keyword + '뉴스 요약본은 파일로 첨부하여 보냅니다'
-file = keyword + '.xlsx'
+del emails[0]
 
-send_mail(name, address, subject, contents, file)
+for x, y, z in emails:
+        name = y
+        address = z
+        subject = keyword + '뉴스 입니다'
+        contents = keyword + '뉴스 요약본은 파일로 첨부하여 보냅니다'
+        file = keyword + '.xlsx'
+        send_mail(name, address, subject, contents, file)
