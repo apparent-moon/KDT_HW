@@ -1,3 +1,5 @@
+window.addEventListener('DOMContentLoaded', function(){ $submit })
+
 // 글쓰기 버튼 페이지 이동 방지
 const $submit = document.querySelector('button[type="submit"]');
 $submit &&
