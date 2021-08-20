@@ -46,7 +46,6 @@ I coded the file to receive keywords and crawled titles from the user, create an
 4. Enter a excel file name.
 5. Check your e-mail.
 
-
 ### mini_project 4
 
 > html, css
@@ -56,3 +55,4 @@ This project was to correct errors in the `index.html` file.
 > how to run
 1. If you don't have a `chrome` browser, download it.
 2. Open the `index.html` file in the `mini_project4` folder.
+
